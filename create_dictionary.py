@@ -3,7 +3,7 @@ import json
 import os
 
 class tok_text():
-    def __init__(self, name_of_corpus = 'corpus'):
+    def __init__(self, name_of_corpus = 'corpus.txt'):
         self.name = name_of_corpus
         self.text = open('corpus/' + name_of_corpus).read()
         self.text_tok = nltk.casual_tokenize(self.text)

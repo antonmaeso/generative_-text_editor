@@ -8,7 +8,7 @@ class ngramlm:
 
         if not os.path.exists('corpus/' + self.name + '_probability_dict.json'):
             print 'saving bigram probability model'
-            with open('corpus/' + 'corpus' + '.json', 'r') as corpus:
+            with open('corpus/' + 'corpus' + '.txt.json', 'r') as corpus:
                 self.corpus = json.load(corpus)
             self.dict_unigram_freq = {}
             self.dict_bigram_freq = {}
