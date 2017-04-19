@@ -84,7 +84,11 @@ class Text_Editor(object):
         :return:
         """
         Word_Prediction_List.delete(0, END)
-        self.next_word = self.language_model.nextword(self.word)
+        if len(self.previous_ten_words) >= 2:
+            print 'here'
+            self.next_word = self.language_model.nextword(self.previous_ten_words[-1], self.previous_ten_words[-2])
+        elif len(self.previous_ten_words) >= 1:
+            self.next_word = self.language_model.nextword(self.previous_ten_words[-1])
         nums = 0
         for word in self.next_word:
             self.list_of_predictions.append(word[1])
@@ -110,8 +114,10 @@ class Text_Editor(object):
         :param event:
         :return:
         """
+        #### change for trigram
         self.text.insert(INSERT, ' ' + self.list_of_predictions[Word_Prediction_List.curselection()[0]])
         self.word = self.list_of_predictions[Word_Prediction_List.curselection()[0]]
+        self.save_ten_words()
         self.list_of_predictions = []
         self.pop_list()
 
