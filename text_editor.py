@@ -12,8 +12,9 @@ class MyApp(object):
         self.word = ''
         self.filename = None
         self.language_model = lm('corpus.txt')
-        self.next_words = []
-
+        self.next_word = []
+        self.previous_ten_words = []
+        self.list_of_predictions = []
 
     def newFile(self):
         self.filename = "Untitled"
@@ -46,43 +47,46 @@ class MyApp(object):
         character = '{k!r}'.format(k=event.char)
         if character[1] == ' ':
             print self.word
-            self.next_words = self.language_model.nextword(self.word)
-            List1.delete(0, END)
-            nums = 0
-            for word in self.next_words:
-                List1.insert(nums, word[1])
-                nums += 1
-            self.word = ''
+            self.save_ten_words()
+            self.pop_list()
         elif(character[1].isalpha()):
             self.word += character[1]
 
-    def check_word_in_dictionary(self):
-        """
-        queries the dictionary for the previous word
+    def pop_list(self):
+        List1.delete(0, END)
+        self.next_word = self.language_model.nextword(self.word)
+        nums = 0
+        for word in self.next_word:
+            self.list_of_predictions.append(word[1])
+            List1.insert(nums, word[1])
+            nums += 1
+        self.word = ''
 
-        :return:
-        """
-        pass
-    def drop_d_next_word_options(self):
+    def save_ten_words(self):
         """
         gives a drop down list of possible next words
         :return:
         """
-        pass
-    def enters_chosen_word_from_ddl(self):
-        pass
-    def populatelist(self):
-        nums = 1
-        for word in self.next_words:
-            List1.insert(nums, word[1])
-            nums += 1
+        if len(self.previous_ten_words) <= 10:
+            self.previous_ten_words.append(self.word)
+        elif len(self.previous_ten_words) > 10:
+            self.previous_ten_words.pop(0)
+            self.previous_ten_words.append(self.word)
+
+
+    def enters_chosen_word_from_ddl(self, event):
+        self.text.insert(INSERT, ' ' + self.list_of_predictions[List1.curselection()[0]])
+        self.word = self.list_of_predictions[List1.curselection()[0]]
+        self.list_of_predictions = []
+        self.pop_list()
+
 
 root = Tk()
 app = MyApp(root)
 
 root.title("My python text editor")
 root.minsize(width=400, height=400)
-root.maxsize(width=400, height=800)
+root.maxsize(width=800, height=800)
 
 menubar = Menu(root)
 filemenu = Menu(menubar)
@@ -94,11 +98,10 @@ filemenu.add_command(label="Quit", command=root.quit)
 menubar.add_cascade(label = "File", menu =filemenu)
 filemenu.add_separator()
 
-List1 = Listbox()
-scrollbar = Scrollbar(List1, orient=VERTICAL)
-List1.config(yscrollcommand=scrollbar.set)
-scrollbar.config(command=List1.yview)
-app.populatelist()
+
+List1=Listbox(root,width=63,height=10)
+List1.bind('<<ListboxSelect>>',app.enters_chosen_word_from_ddl)
+List1.place(x=32,y=90)
+
 List1.pack()
 root.mainloop()
-

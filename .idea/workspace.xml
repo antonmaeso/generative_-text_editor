@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0cb8825e-112c-4a81-a447-566190a66c14" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/corpus/corpus" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/corpus/corpus.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/corpus/corpus_int_word_dict.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/corpus/corpus_probability_dict.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/corpus/corpus_word_int_dict.json" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/create_dictionary.py" afterPath="$PROJECT_DIR$/create_dictionary.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/n_gram_lang_model.py" afterPath="$PROJECT_DIR$/n_gram_lang_model.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/text_editor.py" afterPath="$PROJECT_DIR$/text_editor.py" />
     </list>
     <ignored path="ngramlm.iws" />
@@ -57,8 +50,8 @@
       <file leaf-file-name="text_editor.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/text_editor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="84" column="32" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
+            <state relative-caret-position="179">
+              <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
               <folding>
                 <element signature="e#23#45#0" expanded="true" />
               </folding>
@@ -96,6 +89,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="anton_maeso &lt;antonmaeso@hotmail.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -406,6 +404,14 @@
       <option name="presentableId" value="Default" />
       <updated>1492247189205</updated>
     </task>
+    <task id="LOCAL-00001" summary="added bigram lm to text">
+      <created>1492558901324</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1492558901325</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -441,6 +447,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added bigram lm to text" />
+    <option name="LAST_COMMIT_MESSAGE" value="added bigram lm to text" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -573,8 +583,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/text_editor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="84" column="32" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
+        <state relative-caret-position="179">
+          <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
           <folding>
             <element signature="e#23#45#0" expanded="true" />
           </folding>
