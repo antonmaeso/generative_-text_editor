@@ -3,15 +3,18 @@ import json
 import os
 
 class tok_text():
-    def __init__(self, name_of_corpus = 'corpus.txt'):
+    def __init__(self, name_of_corpus = 'corpus'):
         self.name = name_of_corpus
-        self.text = open('corpus/' + name_of_corpus).read()
+        self.text = open('corpus/' + self.name + '.txt').read()
         self.text_tok = nltk.casual_tokenize(self.text)
         if not os.path.exists('corpus/' + self.name + '_word_int_dict.json'):
             print 'create dictionaries'
             self.word_to_int = {}
             self.createdict()
             self.int_to_word = {v: k for k, v in self.word_to_int.items()}
+            self.save_text_toke()
+            self.save_int_to_word_dict()
+            self.save_word_to_int_dict()
         else:
             print 'load existing dictionary'
             with open('corpus/' + self.name + '_int_word_dict.json', 'r') as int_word_dict:
@@ -52,10 +55,3 @@ class tok_text():
 
     def look_up_int(self, int_word):
         return self.word_to_int.keys()[self.word_to_int.values().index(int_word)]
-
-
-
-y = tok_text()
-y.save_text_toke()
-y.save_int_to_word_dict()
-y.save_word_to_int_dict()

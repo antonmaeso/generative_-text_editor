@@ -1,14 +1,16 @@
 import json
 import os
-class ngramlm:
+import create_dictionary
+import numpy as np
+class bigram_lm:
     def __init__(self, name = 'corpus'):
-
+        create_dictionary.tok_text(name)
         self.name = name
         self.prob_of_words = {}
 
         if not os.path.exists('corpus/' + self.name + '_probability_dict.json'):
             print 'saving bigram probability model'
-            with open('corpus/' + 'corpus' + '.txt.json', 'r') as corpus:
+            with open('corpus/' + self.name + '.json', 'r') as corpus:
                 self.corpus = json.load(corpus)
             self.dict_unigram_freq = {}
             self.dict_bigram_freq = {}
@@ -39,7 +41,7 @@ class ngramlm:
     def prob_of_next_word(self):
 
         for bigram in self.dict_bigram_freq:
-            self.prob_of_words[bigram] = float(self.dict_bigram_freq[bigram])/self.dict_unigram_freq[bigram[0]]
+            self.prob_of_words[bigram] = np.log(self.dict_bigram_freq[bigram])- np.log(self.dict_unigram_freq[bigram[0]])
 
     def save_prob_dict(self):
         dumpbiprob = {}
@@ -59,4 +61,4 @@ class ngramlm:
         for prob in self.prob_of_words:
             if prob[0] == word:
                 word_probs.append((prob[0], prob[1], self.prob_of_words[prob]))
-        return word_probs
+        return sorted(word_probs, key=lambda tup: tup[2], reverse=True)
