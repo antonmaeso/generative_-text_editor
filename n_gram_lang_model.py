@@ -9,8 +9,8 @@ class bigram_lm:
         self.prob_of_words_bigram = {}
         self.prob_of_words_trigram = {}
 
-        if not os.path.exists('corpus/' + self.name + '_probability_dict.json'):
-            print 'saving bigram probability model'
+        if not os.path.exists('corpus/' + self.name + '_tri_probability_dict.json'):
+            print 'saving n-gram probability model'
             with open('corpus/' + self.name + '.json', 'r') as corpus:
                 self.corpus = json.load(corpus)
             self.dict_unigram_freq = {}
@@ -20,9 +20,10 @@ class bigram_lm:
             self.bigram_freq()
             self.trigram_freq()
             self.prob_of_next_word_bigram()
+            self.prob_of_next_word_trigram()
             self.save_prob_dict()
         else:
-            print 'loading existing bigram probability model'
+            print 'loading existing n-gram probability model'
             self.load_existing_dictionary()
 
     def unigram_freq(self):
@@ -55,21 +56,25 @@ class bigram_lm:
 
     def prob_of_next_word_trigram(self):
         for trigram in self.dict_trigram_freq:
-            self.prob_of_words_trigram[trigram] = np.log(self.dict_bigram_freq[trigram])- np.log(self.dict_bigram_freq[trigram[0],trigram[1]])
+            self.prob_of_words_trigram[trigram] = np.log(self.dict_trigram_freq[trigram])- np.log(self.dict_bigram_freq[trigram[0],trigram[1]])
 
     def save_prob_dict(self):
         dumptriprob = {}
         for tups in self.prob_of_words_trigram:
             dumptriprob[tups[0] + ' ' + tups[1] + ' ' + tups[2]] = self.prob_of_words_trigram[tups]
-        with open('corpus/' + self.name + '_bi_probability_dict.json', 'w') as outfile:
+        with open('corpus/' + self.name + '_tri_probability_dict.json', 'w') as outfile:
             json.dump(dumptriprob, outfile)
+        outfile.close()
         dumpbiprob = {}
+
         for tups in self.prob_of_words_bigram:
             dumpbiprob[tups[0] + ' ' + tups[1]] = self.prob_of_words_bigram[tups]
-        with open('corpus/' + self.name + '_tri_probability_dict.json', 'w') as outfile:
+        with open('corpus/' + self.name + '_bi_probability_dict.json', 'w') as outfile:
             json.dump(dumpbiprob, outfile)
+        outfile.close()
 
     def load_existing_dictionary(self):
+
         with open('corpus/' + self.name + '_bi_probability_dict.json', 'r') as prob_dict:
             unformated_prob_dict = json.load(prob_dict)
         for key in unformated_prob_dict:
@@ -86,9 +91,11 @@ class bigram_lm:
             for prob in self.prob_of_words_trigram:
                 if prob[0] == first_word and prob[1] == second_word:
                     word_probs.append((prob[0], prob[1], prob[2], self.prob_of_words_trigram[prob]))
+            sorted_words = sorted(word_probs, key=lambda tup: tup[2], reverse=True)
+            return sorted_words
         if first_word != None:
             for prob in self.prob_of_words_bigram:
                 if prob[0] == first_word:
                     word_probs.append((prob[0], prob[1], self.prob_of_words_bigram[prob]))
-        sorted_words = sorted(word_probs, key=lambda tup: tup[2], reverse=True)
-        return sorted_words
+            sorted_words = sorted(word_probs, key=lambda tup: tup[2], reverse=True)
+            return sorted_words

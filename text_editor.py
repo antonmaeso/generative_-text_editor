@@ -85,14 +85,18 @@ class Text_Editor(object):
         """
         Word_Prediction_List.delete(0, END)
         if len(self.previous_ten_words) >= 2:
-            print 'here'
             self.next_word = self.language_model.nextword(self.previous_ten_words[-1], self.previous_ten_words[-2])
-        elif len(self.previous_ten_words) >= 1:
+        elif len(self.previous_ten_words) >= 1 or self.next_word == None:
+            print 'here'
             self.next_word = self.language_model.nextword(self.previous_ten_words[-1])
         nums = 0
         for word in self.next_word:
-            self.list_of_predictions.append(word[1])
-            Word_Prediction_List.insert(nums, word[1])
+            if len(word) == 4:
+                self.list_of_predictions.append(word[2])
+                Word_Prediction_List.insert(nums, word[2])
+            if len(word) == 3:
+                self.list_of_predictions.append(word[1])
+                Word_Prediction_List.insert(nums, word[1])
             nums += 1
         self.word = ''
 
