@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0cb8825e-112c-4a81-a447-566190a66c14" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/n_gram_lang_model.py" afterPath="$PROJECT_DIR$/n_gram_lang_model.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/text_editor.py" afterPath="$PROJECT_DIR$/text_editor.py" />
     </list>
     <ignored path="ngramlm.iws" />
@@ -39,7 +38,7 @@
       <file leaf-file-name="n_gram_lang_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/n_gram_lang_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
+            <state relative-caret-position="-390">
               <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -51,8 +50,18 @@
       <file leaf-file-name="corpus_tri_probability_dict.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/corpus/corpus_tri_probability_dict.json">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1062730">
+              <caret line="0" column="310" selection-start-line="0" selection-start-column="306" selection-end-line="0" selection-end-column="310" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="corpus_bi_probability_dict.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/corpus/corpus_bi_probability_dict.json">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="1670" selection-start-line="0" selection-start-column="1670" selection-end-line="0" selection-end-column="1670" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -61,8 +70,8 @@
       <file leaf-file-name="text_editor.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/text_editor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="89" column="24" selection-start-line="89" selection-start-column="24" selection-end-line="89" selection-end-column="24" />
+            <state relative-caret-position="120">
+              <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
               <folding>
                 <element signature="e#23#45#0" expanded="true" />
               </folding>
@@ -443,7 +452,14 @@
       <option name="project" value="LOCAL" />
       <updated>1492626297383</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="trigram_lm still with bugs">
+      <created>1492636985547</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1492636985547</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView">
@@ -512,7 +528,8 @@
     <MESSAGE value="select next word from options" />
     <MESSAGE value="add comments, fixed loading the dictionary and changed probs to log probs" />
     <MESSAGE value="add trigram language model" />
-    <option name="LAST_COMMIT_MESSAGE" value="add trigram language model" />
+    <MESSAGE value="trigram_lm still with bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="trigram_lm still with bugs" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -578,14 +595,6 @@
     <entry file="file://$PROJECT_DIR$/word_int_dict.json" />
     <entry file="file://$PROJECT_DIR$/defaultword_int_dict.json" />
     <entry file="file://$PROJECT_DIR$/corpus/default.json" />
-    <entry file="file://$PROJECT_DIR$/Untitled">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/corpus/corpus">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -668,14 +677,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/corpus/corpus_bi_probability_dict.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/corpus/corpus_bii_probability_dict.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -684,9 +685,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/corpus/corpus_bi_probability_dict.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/corpus/corpus_tri_probability_dict.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1062730">
+          <caret line="0" column="310" selection-start-line="0" selection-start-column="306" selection-end-line="0" selection-end-column="310" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/n_gram_lang_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
+        <state relative-caret-position="-390">
           <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -694,18 +711,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/corpus/corpus_tri_probability_dict.json">
+    <entry file="file://$PROJECT_DIR$/Untitled">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="1670" selection-start-line="0" selection-start-column="1670" selection-end-line="0" selection-end-column="1670" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/text_editor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="89" column="24" selection-start-line="89" selection-start-column="24" selection-end-line="89" selection-end-column="24" />
+        <state relative-caret-position="120">
+          <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
           <folding>
             <element signature="e#23#45#0" expanded="true" />
           </folding>

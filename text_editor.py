@@ -83,12 +83,14 @@ class Text_Editor(object):
         populate the list with predicted next words
         :return:
         """
+        self.next_word = []
         Word_Prediction_List.delete(0, END)
         if len(self.previous_ten_words) >= 2:
-            self.next_word = self.language_model.nextword(self.previous_ten_words[-1], self.previous_ten_words[-2])
-        elif len(self.previous_ten_words) >= 1 or self.next_word == None:
-            print 'here'
-            self.next_word = self.language_model.nextword(self.previous_ten_words[-1])
+            self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-1], self.previous_ten_words[-2]))
+            print self.next_word
+        if len(self.previous_ten_words) >= 1 or self.next_word == None:
+
+            self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
         nums = 0
         for word in self.next_word:
             if len(word) == 4:
