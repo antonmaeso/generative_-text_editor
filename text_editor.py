@@ -21,6 +21,7 @@ class Text_Editor(object):
         self.next_word = []
         self.previous_ten_words = []
         self.list_of_predictions = []
+        self.keep_track_of_space = False
 
     def newFile(self):
         """
@@ -73,6 +74,7 @@ class Text_Editor(object):
         print('{k!r}'.format(k=event.char))
         character = '{k!r}'.format(k=event.char)
         if character[1] == ' ':
+            self.keep_track_of_space = True
             self.save_ten_words()
             self.populate_list()
         elif character[1].isalpha():
@@ -91,15 +93,16 @@ class Text_Editor(object):
             self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
         nums = 0
         print self.previous_ten_words
-        print self.next_word
         for word in self.next_word:
-            if len(word) == 4:
+            if len(word) == 4 and word[2] not in self.list_of_predictions:
+                print word
                 self.list_of_predictions.append(word[2])
                 Word_Prediction_List.insert(nums, word[2])
-            elif len(word) == 3:
+                nums += 1
+            elif len(word) == 3 and word[1] not in self.list_of_predictions:
                 self.list_of_predictions.append(word[1])
                 Word_Prediction_List.insert(nums, word[1])
-            nums += 1
+                nums += 1
         self.word = ''
 
     def save_ten_words(self):
@@ -107,9 +110,9 @@ class Text_Editor(object):
         saves the previous 10 words in prep for more advanced language models
         :return:
         """
-        if len(self.previous_ten_words) <= 10 and self.word != None:
+        if len(self.previous_ten_words) <= 10 and self.word != '':
             self.previous_ten_words.append(self.word)
-        elif len(self.previous_ten_words) > 10 and self.word != None:
+        elif len(self.previous_ten_words) > 10 and self.word != '':
             self.previous_ten_words.pop(0)
             self.previous_ten_words.append(self.word)
 
@@ -121,7 +124,16 @@ class Text_Editor(object):
         :return:
         """
         #### change for trigram
-        self.text.insert(INSERT, ' ' + self.list_of_predictions[Word_Prediction_List.curselection()[0]])
+        if self.keep_track_of_space == False:
+            self.text.insert(INSERT, ' ')
+            self.keep_track_of_space = True
+
+        self.text.insert(INSERT,self.list_of_predictions[Word_Prediction_List.curselection()[0]])
+
+        self.text.insert(INSERT, ' ')
+        self.keep_track_of_space = True
+
+
         self.word = self.list_of_predictions[Word_Prediction_List.curselection()[0]]
         self.save_ten_words()
         self.list_of_predictions = []

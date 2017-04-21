@@ -139,20 +139,22 @@ class ngram_lm:
         word_probs = []
 
         if first_word != None and second_word != None:
-
+            print 'here tri bi'
             for prob in self.prob_of_words_trigram:
                 if prob[0] == first_word and prob[1] == second_word:
+                    # print (prob[0], prob[1], prob[2], self.prob_of_words_trigram[prob])
                     word_probs.append((prob[0], prob[1], prob[2], self.prob_of_words_trigram[prob]))
             sorted_words = sorted(word_probs, key=lambda tup: tup[2], reverse=True)
 
             for prob in self.prob_of_words_bigram:
                 if prob[0] == second_word:
+                    # print (prob[0], prob[1], self.prob_of_words_bigram[prob])
                     word_probs.append((prob[0], prob[1], self.prob_of_words_bigram[prob]))
             sorted_words.extend(sorted(word_probs, key=lambda tup: tup[2], reverse=True))
             return sorted_words[:30]
 
         elif first_word != None and second_word == None:
-
+            print 'bi'
             for prob in self.prob_of_words_bigram:
                 if prob[0] == first_word:
                     word_probs.append((prob[0], prob[1], self.prob_of_words_bigram[prob]))
