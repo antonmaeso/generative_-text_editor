@@ -90,6 +90,8 @@ class Text_Editor(object):
         elif len(self.previous_ten_words) == 1 or self.next_word == None:
             self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
         nums = 0
+        print self.previous_ten_words
+        print self.next_word
         for word in self.next_word:
             if len(word) == 4:
                 self.list_of_predictions.append(word[2])
