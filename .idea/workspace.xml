@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0cb8825e-112c-4a81-a447-566190a66c14" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/n_gram_lang_model.py" afterPath="$PROJECT_DIR$/n_gram_lang_model.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/text_editor.py" afterPath="$PROJECT_DIR$/text_editor.py" />
     </list>
     <ignored path="ngramlm.iws" />
@@ -38,21 +39,11 @@
       <file leaf-file-name="n_gram_lang_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/n_gram_lang_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-390">
-              <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+            <state relative-caret-position="149">
+              <caret line="146" column="41" selection-start-line="146" selection-start-column="40" selection-end-line="146" selection-end-column="41" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="corpus_tri_probability_dict.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/corpus/corpus_tri_probability_dict.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1062730">
-              <caret line="0" column="310" selection-start-line="0" selection-start-column="306" selection-end-line="0" selection-end-column="310" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -67,11 +58,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="corpus_tri_probability_dict.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/corpus/corpus_tri_probability_dict.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-635">
+              <caret line="0" column="2401806" selection-start-line="0" selection-start-column="2401806" selection-end-line="0" selection-end-column="2401806" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="text_editor.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/text_editor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
+            <state relative-caret-position="469">
+              <caret line="125" column="26" selection-start-line="125" selection-start-column="26" selection-end-line="125" selection-end-column="28" />
               <folding>
                 <element signature="e#23#45#0" expanded="true" />
               </folding>
@@ -459,7 +460,14 @@
       <option name="project" value="LOCAL" />
       <updated>1492636985547</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="bigram model backs off to trigram model">
+      <created>1492671788107</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1492671788107</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -481,7 +489,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32909605" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32909605" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33050847" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33050847" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -529,18 +537,12 @@
     <MESSAGE value="add comments, fixed loading the dictionary and changed probs to log probs" />
     <MESSAGE value="add trigram language model" />
     <MESSAGE value="trigram_lm still with bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="trigram_lm still with bugs" />
+    <MESSAGE value="bigram model backs off to trigram model" />
+    <option name="LAST_COMMIT_MESSAGE" value="bigram model backs off to trigram model" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/n_gram_lang_model.py</url>
-          <line>100</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
@@ -661,14 +663,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/corpus/corpus_word_int_dict.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/corpus/corpus_int_word_dict.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -678,6 +672,22 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/corpus/corpus_bii_probability_dict.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Untitled">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/corpus/corpus_word_int_dict.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -695,34 +705,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/corpus/corpus_tri_probability_dict.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1062730">
-          <caret line="0" column="310" selection-start-line="0" selection-start-column="306" selection-end-line="0" selection-end-column="310" />
+        <state relative-caret-position="-635">
+          <caret line="0" column="2401806" selection-start-line="0" selection-start-column="2401806" selection-end-line="0" selection-end-column="2401806" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/n_gram_lang_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-390">
-          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+        <state relative-caret-position="149">
+          <caret line="146" column="41" selection-start-line="146" selection-start-column="40" selection-end-line="146" selection-end-column="41" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Untitled">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/text_editor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
+        <state relative-caret-position="469">
+          <caret line="125" column="26" selection-start-line="125" selection-start-column="26" selection-end-line="125" selection-end-column="28" />
           <folding>
             <element signature="e#23#45#0" expanded="true" />
           </folding>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 from  Tkinter import *
 from tkFileDialog import *
-from n_gram_lang_model import bigram_lm as lm
+from n_gram_lang_model import ngram_lm as lm
 
 class Text_Editor(object):
     """
@@ -74,11 +74,11 @@ class Text_Editor(object):
         character = '{k!r}'.format(k=event.char)
         if character[1] == ' ':
             self.save_ten_words()
-            self.pop_list()
-        elif(character[1].isalpha()):
+            self.populate_list()
+        elif character[1].isalpha():
             self.word += character[1]
 
-    def pop_list(self):
+    def populate_list(self):
         """
         populate the list with predicted next words
         :return:
@@ -86,17 +86,15 @@ class Text_Editor(object):
         self.next_word = []
         Word_Prediction_List.delete(0, END)
         if len(self.previous_ten_words) >= 2:
-            self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-1], self.previous_ten_words[-2]))
-            print self.next_word
-        if len(self.previous_ten_words) >= 1 or self.next_word == None:
-
+            self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-2], self.previous_ten_words[-1]))
+        elif len(self.previous_ten_words) == 1 or self.next_word == None:
             self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
         nums = 0
         for word in self.next_word:
             if len(word) == 4:
                 self.list_of_predictions.append(word[2])
                 Word_Prediction_List.insert(nums, word[2])
-            if len(word) == 3:
+            elif len(word) == 3:
                 self.list_of_predictions.append(word[1])
                 Word_Prediction_List.insert(nums, word[1])
             nums += 1
@@ -107,9 +105,9 @@ class Text_Editor(object):
         saves the previous 10 words in prep for more advanced language models
         :return:
         """
-        if len(self.previous_ten_words) <= 10:
+        if len(self.previous_ten_words) <= 10 and self.word != None:
             self.previous_ten_words.append(self.word)
-        elif len(self.previous_ten_words) > 10:
+        elif len(self.previous_ten_words) > 10 and self.word != None:
             self.previous_ten_words.pop(0)
             self.previous_ten_words.append(self.word)
 
@@ -125,7 +123,7 @@ class Text_Editor(object):
         self.word = self.list_of_predictions[Word_Prediction_List.curselection()[0]]
         self.save_ten_words()
         self.list_of_predictions = []
-        self.pop_list()
+        self.populate_list()
 
 
 root = Tk()
