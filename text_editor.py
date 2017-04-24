@@ -18,7 +18,6 @@ class Text_Editor(object):
         self.filename = None
         # Create instance of Language model
         self.language_model = lm('corpus')
-        self.next_word = []
         self.previous_ten_words = []
         self.list_of_predictions = []
         self.keep_track_of_space = False
@@ -78,24 +77,29 @@ class Text_Editor(object):
             self.save_ten_words()
             self.populate_list()
         elif character[1].isalpha():
+            # Word_Prediction_List.delete(0, END)
+            Word_Prediction_List.update()
             self.word += character[1]
+
 
     def populate_list(self):
         """
         populate the list with predicted next words
         :return:
         """
-        self.next_word = []
+        next_word = []
         Word_Prediction_List.delete(0, END)
+        self.list_of_predictions = []
+        # trigram
         if len(self.previous_ten_words) >= 2:
-            self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-2], self.previous_ten_words[-1]))
-        elif len(self.previous_ten_words) == 1 or self.next_word == None:
-            self.next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
+            next_word.extend(self.language_model.nextword(self.previous_ten_words[-2], self.previous_ten_words[-1]))
+        # bigram
+        elif len(self.previous_ten_words) == 1 or next_word == None:
+            next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
         nums = 0
-        print self.previous_ten_words
-        for word in self.next_word:
+
+        for word in next_word:
             if len(word) == 4 and word[2] not in self.list_of_predictions:
-                print word
                 self.list_of_predictions.append(word[2])
                 Word_Prediction_List.insert(nums, word[2])
                 nums += 1
@@ -117,13 +121,12 @@ class Text_Editor(object):
             self.previous_ten_words.append(self.word)
 
 
-    def enters_chosen_word_from_ddl(self, event):
+    def enters_chosen_word_from_list(self, event):
         """
         On selecting element from list enter into text and repopulate list with new predictions
         :param event:
         :return:
         """
-        #### change for trigram
         if self.keep_track_of_space == False:
             self.text.insert(INSERT, ' ')
             self.keep_track_of_space = True
@@ -157,8 +160,7 @@ menubar.add_cascade(label="File", menu=filemenu)
 filemenu.add_separator()
 
 Word_Prediction_List = Listbox(root, width=63, height=10)
-Word_Prediction_List.bind('<<ListboxSelect>>', text_editor.enters_chosen_word_from_ddl)
+Word_Prediction_List.bind('<<ListboxSelect>>', text_editor.enters_chosen_word_from_list)
 Word_Prediction_List.place(x=32, y=90)
-
 Word_Prediction_List.pack()
 root.mainloop()

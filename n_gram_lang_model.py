@@ -151,7 +151,7 @@ class ngram_lm:
                     # print (prob[0], prob[1], self.prob_of_words_bigram[prob])
                     word_probs.append((prob[0], prob[1], self.prob_of_words_bigram[prob]))
             sorted_words.extend(sorted(word_probs, key=lambda tup: tup[2], reverse=True))
-            return sorted_words[:30]
+            return sorted_words
 
         elif first_word != None and second_word == None:
             print 'bi'
