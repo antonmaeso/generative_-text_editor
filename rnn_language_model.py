@@ -1,3 +1,5 @@
+# Based on https://github.com/dennybritz/rnn-tutorial-rnnlm
+
 import numpy as np
 import sys
 import json
