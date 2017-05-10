@@ -38,6 +38,7 @@ class tok_text():
                 self.word_to_int['UNK'] = key +1
 
 
+
     def save_word_to_int_dict(self):
         with open('corpus/' + self.name + '_word_int_dict.json', 'w') as outfile:
             json.dump(self.word_to_int, outfile)

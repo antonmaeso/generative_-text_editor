@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+
 from  Tkinter import *
 from tkFileDialog import *
 from n_gram_lang_model import ngram_lm as lm
@@ -77,7 +78,6 @@ class Text_Editor(object):
             self.save_ten_words()
             self.populate_list()
         elif character[1].isalpha():
-            # Word_Prediction_List.delete(0, END)
             Word_Prediction_List.update()
             self.word += character[1]
 
@@ -132,11 +132,8 @@ class Text_Editor(object):
             self.keep_track_of_space = True
 
         self.text.insert(INSERT,self.list_of_predictions[Word_Prediction_List.curselection()[0]])
-
         self.text.insert(INSERT, ' ')
         self.keep_track_of_space = True
-
-
         self.word = self.list_of_predictions[Word_Prediction_List.curselection()[0]]
         self.save_ten_words()
         self.list_of_predictions = []

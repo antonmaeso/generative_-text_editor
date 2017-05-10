@@ -15,7 +15,6 @@ class ngram_lm:
         self.name = name
         self.prob_of_words_bigram = {}
         self.prob_of_words_trigram = {}
-
         if not os.path.exists('corpus/' + self.name + '_tri_probability_dict.json'):
             print 'saving n-gram probability model'
             self.save_new_probability_model()
@@ -48,6 +47,7 @@ class ngram_lm:
                 self.dict_unigram_freq[word] += 1
             else:
                 self.dict_unigram_freq[word] = 1
+        return self.dict_unigram_freq
 
     def bigram_freq(self):
         """
@@ -139,7 +139,6 @@ class ngram_lm:
         word_probs = []
 
         if first_word != None and second_word != None:
-            print 'here tri bi'
             for prob in self.prob_of_words_trigram:
                 if prob[0] == first_word and prob[1] == second_word:
                     # print (prob[0], prob[1], prob[2], self.prob_of_words_trigram[prob])
@@ -150,6 +149,7 @@ class ngram_lm:
                 if prob[0] == second_word:
                     # print (prob[0], prob[1], self.prob_of_words_bigram[prob])
                     word_probs.append((prob[0], prob[1], self.prob_of_words_bigram[prob]))
+
             sorted_words.extend(sorted(word_probs, key=lambda tup: tup[2], reverse=True))
             return sorted_words
 
