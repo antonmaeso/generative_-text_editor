@@ -73,11 +73,12 @@ y_train = np.asarray([[word_to_id[w] for w in sent[1:]] for sent in list_of_s])
 
 ################################################################
 class RNNNumpy:
-    def __init__(self, word_dim, hidden_dim=100, bptt_truncate=4):
+    def __init__(self, word_dim, corpus_name, hidden_dim=100, bptt_truncate=4):
         # Assign instance variables
         self.word_dim = word_dim
         self.hidden_dim = hidden_dim
         self.bptt_truncate = bptt_truncate
+        self.corpus_name = corpus_name
         # Randomly initialize the network parameters
         self.U = np.random.uniform(-np.sqrt(1. / word_dim), np.sqrt(1. / word_dim), (hidden_dim, word_dim))
         self.V = np.random.uniform(-np.sqrt(1. / hidden_dim), np.sqrt(1. / hidden_dim), (word_dim, hidden_dim))
@@ -199,6 +200,39 @@ class RNNNumpy:
         self.V -= learning_rate * dLdV
         self.W -= learning_rate * dLdW
 
+    def load_model_parameters(self, path, model):
+        npzfile = np.load(path)
+        U, V, W = npzfile["U"], npzfile["V"], npzfile["W"]
+        model.hidden_dim = U.shape[0]
+        model.word_dim = U.shape[1]
+        model.U = U
+        model.V = V
+        model.W = W
+        print "Loaded model parameters from %s. hidden_dim=%d word_dim=%d" % (path, U.shape[0], U.shape[1])
+
+
+        with open('./corpus/' + self.corpus_name + '.json', 'r') as rnn:
+            model_parameters = json.load(rnn)
+            last_model = model_parameters[-1]
+            model.word_dim = last_model["word_dim"]
+            model.hidden_dim = last_model["hidden_dim"]
+            model.bptt_truncate = last_model["bptt_truncate"]
+            current_epoch = last_model["current_epoch"]
+            current_loss = last_model["current_loss"]
+            learning_rate = last_model["current_learning_rate"]
+            num_examples_seen = last_model["num_examples_seen"]
+            model.corpus_name = self.corpus_name
+            return (current_epoch, current_loss, learning_rate, num_examples_seen)
+
+
+
+
+        # print last_model
+        # print 'load existing model ' + self.corpus_name + '.json' + 'last modified at' + str(
+        #     last_model["time"]) + 'epoch ' + str(last_model["current epoch"])
+
+
+
     # Outer SGD Loop
     # - model: The RNN model instance
     # - X_train: The training data set
@@ -206,33 +240,97 @@ class RNNNumpy:
     # - learning_rate: Initial learning rate for SGD
     # - nepoch: Number of times to iterate through the complete dataset
     # - evaluate_loss_after: Evaluate the loss after this many epochs
-    def train_with_sgd(model, X_train, y_train, learning_rate=0.005, nepoch=100, evaluate_loss_after=5):
+    def train_with_sgd(model, X_train, y_train, learning_rate=0.005, nepoch=100, evaluate_loss_after=5, saving_model_after=5, load_existing_model=''):
         # We keep track of the losses so we can plot them later
-        losses = []
-        num_examples_seen = 0
-        for epoch in range(nepoch):
-            # Optionally evaluate the loss
-            if (epoch % evaluate_loss_after == 0):
-                loss = model.calculate_loss(X_train, y_train)
-                losses.append((num_examples_seen, loss))
-                time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                print "%s: Loss after num_examples_seen=%d epoch=%d: %f" % (time, num_examples_seen, epoch, loss)
-                # Adjust the learning rate if loss increases
-                if (len(losses) > 1 and losses[-1][1] > losses[-2][1]):
-                    learning_rate = learning_rate * 0.5
-                    print "Setting learning rate to %f" % learning_rate
-                sys.stdout.flush()
-            # For each training example...
-            for i in range(len(y_train)):
-                # One SGD step
-                model.sgd_step(X_train[i], y_train[i], learning_rate)
-                num_examples_seen += 1
+        # load model and continue training
+        if load_existing_model:
+            parrameters = model.load_model_parameters(load_existing_model, model)
+            learning_rate = parrameters[2]
+            losses = parrameters[1][:-1]
+            num_examples_seen = parrameters[1][-1][0]
+            for epoch in range(parrameters[0]+1,nepoch):
+                # Optionally evaluate the loss
+                if (epoch % evaluate_loss_after == 0):
+                    loss = model.calculate_loss(X_train, y_train)
+                    losses.append((num_examples_seen, loss))
+                    time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    print "%s: Loss after num_examples_seen=%d epoch=%d: %f" % (time, num_examples_seen, epoch, loss)
+                    # Adjust the learning rate if loss increases
+                    if (len(losses) > 1 and losses[-1][1] > losses[-2][1]):
+                        learning_rate = learning_rate * 0.5
+                        print "Setting learning rate to %f" % learning_rate
+                    sys.stdout.flush()
+                if epoch % saving_model_after == 0:
+                    model.save_model_parameters('./corpus/training_model_' + model.corpus_name, model=model,
+                                                current_epoch=epoch, total_number_of_epoch=nepoch,
+                                                learning_rate=learning_rate, evaluation_loss_rate=evaluate_loss_after,
+                                                saving_rate=saving_model_after,
+                                                current_loss=losses, num_examples_seen=num_examples_seen)
+                # For each training example...
+                for i in range(len(y_train)):
+                    # One SGD step
+                    model.sgd_step(X_train[i], y_train[i], learning_rate)
+                    num_examples_seen += 1
+        else:
+            losses = []
+            num_examples_seen = 0
+            for epoch in range(nepoch):
+                # Optionally evaluate the loss
+                if (epoch % evaluate_loss_after == 0):
+                    loss = model.calculate_loss(X_train, y_train)
+                    losses.append((num_examples_seen, loss))
+                    time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    print "%s: Loss after num_examples_seen=%d epoch=%d: %f" % (time, num_examples_seen, epoch, loss)
+                    # Adjust the learning rate if loss increases
+                    if (len(losses) > 1 and losses[-1][1] > losses[-2][1]):
+                        learning_rate = learning_rate * 0.5
+                        print "Setting learning rate to %f" % learning_rate
+                    sys.stdout.flush()
+                if epoch % saving_model_after == 0:
+                    model.save_model_parameters('./corpus/training_model_' + model.corpus_name, model=model,
+                                                current_epoch=epoch, total_number_of_epoch=nepoch,
+                                                learning_rate=learning_rate, evaluation_loss_rate=evaluate_loss_after, saving_rate=saving_model_after,
+                                                current_loss=losses, num_examples_seen=num_examples_seen)
+                # For each training example...
+                for i in range(len(y_train)):
+                    # One SGD step
+                    model.sgd_step(X_train[i], y_train[i], learning_rate)
+                    num_examples_seen += 1
 
+
+    def save_model_parameters(self, outfile, model, current_epoch, total_number_of_epoch, learning_rate, evaluation_loss_rate, saving_rate, current_loss, num_examples_seen):
+        print "Start saving training progress of %s.json" % self.corpus_name
+        U, V, W = model.U, model.V, model.W
+        np.savez(outfile, U=U, V=V, W=W)
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        model_parameters = [
+            {'time': time, 'current_epoch': current_epoch, 'total_number_of_epochs': total_number_of_epoch,
+             'current_learning_rate': learning_rate, 'evaluation_loss_rate': evaluation_loss_rate,'saving_rate': saving_rate,
+             'current_loss': current_loss, 'word_dim': self.word_dim, 'hidden_dim': self.hidden_dim,
+             'bptt_truncate': self.bptt_truncate, 'num_examples_seen': num_examples_seen}]
+
+        if current_epoch != 0:
+            with open('corpus/' + self.corpus_name + '.json', 'r') as outfile:
+                data = json.load(outfile)
+                data.extend(model_parameters)
+            outfile.close()
+            with open('corpus/' + self.corpus_name + '.json', 'w') as outfile:
+                json.dump(data, outfile)
+            outfile.close()
+        else:
+            with open('corpus/' + self.corpus_name + '.json', 'w') as outfile:
+                json.dump(model_parameters, outfile)
+            outfile.close()
+        print "End saving training progress of %s.json" % self.corpus_name
+
+
+
+e_m='/Users/antonscomputer/Documents/Documents/generative_text_editor/corpus/training_model_rnn_test.npz'
 
 np.random.seed(10)
 # Train on a small subset of the data to see what happens
-model = RNNNumpy(vocabulary_size)
-losses = model.train_with_sgd(X_train[:100], y_train[:100], nepoch=10, evaluate_loss_after=5)
+model = RNNNumpy(vocabulary_size,corpus_name='rnn_test')
+losses = model.train_with_sgd(X_train[:100], y_train[:100], nepoch=90, evaluate_loss_after=1,saving_model_after=1,load_existing_model=e_m)
 
 def generate_sentence(model):
     # We start the sentence with the start token
