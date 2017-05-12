@@ -6,6 +6,7 @@ import json
 import operator
 from datetime import datetime
 import progressbar
+
 vocabulary_size = 8000
 unknown_token = "UNK"
 sentence_start_token = "start_sentence"
@@ -31,9 +32,6 @@ for word in range(len(corpus)-1):
     if corpus[word] not in most_freq_words:
         corpus[word] = unknown_token
         q_of_UNK += 1
-
-
-
 most_freq_words[unknown_token] = q_of_UNK
 
 list_of_s = []
@@ -336,9 +334,9 @@ e_m='/Users/antonscomputer/Documents/Documents/generative_text_editor/corpus/tra
 
 np.random.seed(10)
 # Train on a small subset of the data to see what happens
-model = RNNNumpy(vocabulary_size+3,corpus_name='rnn_test')
+model = RNNNumpy(vocabulary_size+3,corpus_name='rnn_full_vocab')
 
-losses = model.train_with_sgd(X_train[:10000], y_train[:10000], nepoch=10, evaluate_loss_after=1,saving_model_after=1, load_existing_model=e_m)
+losses = model.train_with_sgd(X_train, y_train, nepoch=20, evaluate_loss_after=1,saving_model_after=1)
 
 def generate_sentence(model):
     # We start the sentence with the start token
@@ -362,19 +360,5 @@ def predict_next_word(model, sentance_so_far):
     samples = np.random.multinomial(1, next_word_probs[-1])
     sampled_word = samples.argsort()[-20:][::-1]
 
-        # sampled_word = np.argmax(samples)
     next_word_probs = [id_to_word[x] for x in sampled_word]
     return next_word_probs
-
-
-num_sentences = 10
-senten_min_length = 7
-#
-# for i in range(num_sentences):
-#     sent = []
-#     # We want long sentences, not sentences with one or two words
-#     while len(sent) < senten_min_length:
-#         sent = generate_sentence(model)
-#     print " ".join(sent)
-
-print predict_next_word(model, ['I', 'want', 'to'])

@@ -3,6 +3,7 @@
 from  Tkinter import *
 from tkFileDialog import *
 from n_gram_lang_model import ngram_lm as lm
+import rnn_language_model as rnn
 
 class Text_Editor(object):
     """
@@ -10,7 +11,7 @@ class Text_Editor(object):
     Inserts word into text editor and returns a prediction of next words
 
     """
-    def __init__(self, master):
+    def __init__(self, master, n_gram = False, rnn_model = True):
         self.text = Text(master)
         self.text.bind('<Key>', self.callback)
         self.text.pack()
@@ -18,7 +19,15 @@ class Text_Editor(object):
         self.word = ''
         self.filename = None
         # Create instance of Language model
-        self.language_model = lm('corpus')
+        self.ngram = n_gram
+        if self.ngram:
+            self.language_model = lm('corpus')
+        self.rnn_lm = rnn_model
+        if self.rnn_lm:
+            self.rnn_language_model = rnn.RNNNumpy(rnn.vocabulary_size+3,corpus_name='rnn_test')
+            self.rnn_language_model.train_with_sgd(rnn.X_train[:10000], rnn.y_train[:10000], nepoch=10, evaluate_loss_after=1,
+                                      saving_model_after=1,
+                                      load_existing_model='/Users/antonscomputer/Documents/Documents/generative_text_editor/corpus/training_model_rnn_test.npz')
         self.previous_ten_words = []
         self.list_of_predictions = []
         self.keep_track_of_space = False
@@ -90,23 +99,34 @@ class Text_Editor(object):
         next_word = []
         Word_Prediction_List.delete(0, END)
         self.list_of_predictions = []
-        # trigram
-        if len(self.previous_ten_words) >= 2:
-            next_word.extend(self.language_model.nextword(self.previous_ten_words[-2], self.previous_ten_words[-1]))
-        # bigram
-        elif len(self.previous_ten_words) == 1 or next_word == None:
-            next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
+        if self.rnn_lm:
+            next_word.extend(rnn.predict_next_word(model=self.rnn_language_model, sentance_so_far=self.previous_ten_words))
+            print self.previous_ten_words
+        if self.ngram:
+            # trigram
+            if len(self.previous_ten_words) >= 2 and self.ngram:
+                print self.previous_ten_words
+                next_word.extend(self.language_model.nextword(self.previous_ten_words[-2], self.previous_ten_words[-1]))
+            # bigram
+            elif len(self.previous_ten_words) == 1 or next_word == None and self.ngram:
+                next_word.extend(self.language_model.nextword(self.previous_ten_words[-1]))
         nums = 0
 
         for word in next_word:
-            if len(word) == 4 and word[2] not in self.list_of_predictions:
-                self.list_of_predictions.append(word[2])
-                Word_Prediction_List.insert(nums, word[2])
+            if self.rnn_lm:
+                self.list_of_predictions.append(word)
+                Word_Prediction_List.insert(nums, word)
                 nums += 1
-            elif len(word) == 3 and word[1] not in self.list_of_predictions:
-                self.list_of_predictions.append(word[1])
-                Word_Prediction_List.insert(nums, word[1])
-                nums += 1
+
+            if self.ngram:
+                if len(word) == 4 and word[2] not in self.list_of_predictions:
+                    self.list_of_predictions.append(word[2])
+                    Word_Prediction_List.insert(nums, word[2])
+                    nums += 1
+                elif len(word) == 3 and word[1] not in self.list_of_predictions:
+                    self.list_of_predictions.append(word[1])
+                    Word_Prediction_List.insert(nums, word[1])
+                    nums += 1
         self.word = ''
 
     def save_ten_words(self):
@@ -114,11 +134,23 @@ class Text_Editor(object):
         saves the previous 10 words in prep for more advanced language models
         :return:
         """
-        if len(self.previous_ten_words) <= 10 and self.word != '':
-            self.previous_ten_words.append(self.word)
-        elif len(self.previous_ten_words) > 10 and self.word != '':
-            self.previous_ten_words.pop(0)
-            self.previous_ten_words.append(self.word)
+        if self.rnn_lm:
+            if len(self.previous_ten_words) <= 10 and self.word != '':
+                if self.word not in rnn.most_freq_words:
+                    self.previous_ten_words.append('UNK')
+                else:
+                    self.previous_ten_words.append(self.word)
+            elif len(self.previous_ten_words) > 10 and self.word != '':
+                self.previous_ten_words.pop(0)
+                self.previous_ten_words.append(self.word)
+
+        if self.ngram:
+            if len(self.previous_ten_words) <= 10 and self.word != '':
+                self.previous_ten_words.append(self.word)
+            elif len(self.previous_ten_words) > 10 and self.word != '':
+                self.previous_ten_words.pop(0)
+                self.previous_ten_words.append(self.word)
+
 
 
     def enters_chosen_word_from_list(self, event):
