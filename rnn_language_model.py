@@ -5,7 +5,7 @@ import sys
 import json
 import operator
 from datetime import datetime
-
+import progressbar
 vocabulary_size = 8000
 unknown_token = "UNK"
 sentence_start_token = "start_sentence"
@@ -109,6 +109,7 @@ class RNNNumpy:
     def predict(self, x):
         # Perform forward propagation and return index of the highest score
         o, s = self.forward_propagation(x)
+        print o
         return np.argmax(o, axis=1)
 
     def calculate_total_loss(self, x, y):
@@ -201,6 +202,7 @@ class RNNNumpy:
         self.W -= learning_rate * dLdW
 
     def load_model_parameters(self, path, model):
+        print 'started loading model'
         npzfile = np.load(path)
         U, V, W = npzfile["U"], npzfile["V"], npzfile["W"]
         model.hidden_dim = U.shape[0]
@@ -222,15 +224,8 @@ class RNNNumpy:
             learning_rate = last_model["current_learning_rate"]
             num_examples_seen = last_model["num_examples_seen"]
             model.corpus_name = self.corpus_name
+            print 'ended loading model'
             return (current_epoch, current_loss, learning_rate, num_examples_seen)
-
-
-
-
-        # print last_model
-        # print 'load existing model ' + self.corpus_name + '.json' + 'last modified at' + str(
-        #     last_model["time"]) + 'epoch ' + str(last_model["current epoch"])
-
 
 
     # Outer SGD Loop
@@ -243,12 +238,14 @@ class RNNNumpy:
     def train_with_sgd(model, X_train, y_train, learning_rate=0.005, nepoch=100, evaluate_loss_after=5, saving_model_after=5, load_existing_model=''):
         # We keep track of the losses so we can plot them later
         # load model and continue training
+
         if load_existing_model:
             parrameters = model.load_model_parameters(load_existing_model, model)
             learning_rate = parrameters[2]
             losses = parrameters[1][:-1]
             num_examples_seen = parrameters[1][-1][0]
             for epoch in range(parrameters[0]+1,nepoch):
+                progress_bar = ''
                 # Optionally evaluate the loss
                 if (epoch % evaluate_loss_after == 0):
                     loss = model.calculate_loss(X_train, y_train)
@@ -267,10 +264,15 @@ class RNNNumpy:
                                                 saving_rate=saving_model_after,
                                                 current_loss=losses, num_examples_seen=num_examples_seen)
                 # For each training example...
-                for i in range(len(y_train)):
-                    # One SGD step
-                    model.sgd_step(X_train[i], y_train[i], learning_rate)
-                    num_examples_seen += 1
+                with progressbar.ProgressBar(max_value=len(y_train)) as bar:
+                    for i in range(len(y_train)):
+                        # One SGD step
+
+                        model.sgd_step(X_train[i], y_train[i], learning_rate)
+                        num_examples_seen += 1
+                        bar.update(i)
+
+                print 'completed epochs: ' + str(epoch) + '/' + str(nepoch)
         else:
             losses = []
             num_examples_seen = 0
@@ -292,10 +294,15 @@ class RNNNumpy:
                                                 learning_rate=learning_rate, evaluation_loss_rate=evaluate_loss_after, saving_rate=saving_model_after,
                                                 current_loss=losses, num_examples_seen=num_examples_seen)
                 # For each training example...
-                for i in range(len(y_train)):
-                    # One SGD step
-                    model.sgd_step(X_train[i], y_train[i], learning_rate)
-                    num_examples_seen += 1
+                with progressbar.ProgressBar(max_value=len(y_train)) as bar:
+                    for i in range(len(y_train)):
+                        # One SGD step
+
+                        model.sgd_step(X_train[i], y_train[i], learning_rate)
+                        num_examples_seen += 1
+                        bar.update(i)
+
+                print 'completed epochs: ' + str(epoch) + '/' + str(nepoch)
 
 
     def save_model_parameters(self, outfile, model, current_epoch, total_number_of_epoch, learning_rate, evaluation_loss_rate, saving_rate, current_loss, num_examples_seen):
@@ -329,8 +336,9 @@ e_m='/Users/antonscomputer/Documents/Documents/generative_text_editor/corpus/tra
 
 np.random.seed(10)
 # Train on a small subset of the data to see what happens
-model = RNNNumpy(vocabulary_size,corpus_name='rnn_test')
-losses = model.train_with_sgd(X_train[:100], y_train[:100], nepoch=90, evaluate_loss_after=1,saving_model_after=1,load_existing_model=e_m)
+model = RNNNumpy(vocabulary_size+3,corpus_name='rnn_test')
+
+losses = model.train_with_sgd(X_train[:10000], y_train[:10000], nepoch=10, evaluate_loss_after=1,saving_model_after=1, load_existing_model=e_m)
 
 def generate_sentence(model):
     # We start the sentence with the start token
@@ -338,21 +346,35 @@ def generate_sentence(model):
     # Repeat until we get an end token
     while not new_sentence[-1] == word_to_id[sentence_end_token]:
         next_word_probs = model.forward_propagation(new_sentence)[0]
-        sampled_word = word_to_id[unknown_token]
         # We don't want to sample unknown words
-        while sampled_word == word_to_id[unknown_token]:
-            samples = np.random.multinomial(1, next_word_probs[-1])
-            sampled_word = np.argmax(samples)
+        samples = np.random.multinomial(1, next_word_probs[-1])
+        sampled_word = np.argmax(samples)
         new_sentence.append(sampled_word)
     sentence_str = [id_to_word[x] for x in new_sentence[1:-1]]
     return sentence_str
 
+def predict_next_word(model, sentance_so_far):
+    # We start the sentence with the start token
+    sentance_so_far = [word_to_id[x] for x in sentance_so_far]
+
+    next_word_probs = model.forward_propagation(sentance_so_far)[0]
+
+    samples = np.random.multinomial(1, next_word_probs[-1])
+    sampled_word = samples.argsort()[-20:][::-1]
+
+        # sampled_word = np.argmax(samples)
+    next_word_probs = [id_to_word[x] for x in sampled_word]
+    return next_word_probs
+
+
 num_sentences = 10
 senten_min_length = 7
+#
+# for i in range(num_sentences):
+#     sent = []
+#     # We want long sentences, not sentences with one or two words
+#     while len(sent) < senten_min_length:
+#         sent = generate_sentence(model)
+#     print " ".join(sent)
 
-for i in range(num_sentences):
-    sent = []
-    # We want long sentences, not sentences with one or two words
-    while len(sent) < senten_min_length:
-        sent = generate_sentence(model)
-    print " ".join(sent)
+print predict_next_word(model, ['I', 'want', 'to'])
